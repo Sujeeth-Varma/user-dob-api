@@ -7,5 +7,11 @@ import (
 )
 
 func Register(app *fiber.App, UserHandler *handler.UserHandler) {
-	app.Post("/users", UserHandler.Create)
+	users := app.Group("/users")
+
+	users.Post("/", UserHandler.Create)
+	users.Get("/", UserHandler.GetList)
+	users.Get("/:id", UserHandler.GetById)
+	users.Put("/:id", UserHandler.Update)
+	users.Delete("/:id", UserHandler.Delete)
 }

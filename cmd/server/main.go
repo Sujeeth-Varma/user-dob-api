@@ -28,8 +28,6 @@ func main() {
 	svc := service.NewUserService(repo)
 	UserHandler := handler.NewUserHandler(svc, log)
 
-	log.Info(os.Getenv("DB_URL"))
-
 	app := fiber.New()
 	routes.Register(app, UserHandler)
 
