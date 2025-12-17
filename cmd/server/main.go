@@ -7,6 +7,7 @@ import (
 	sqlc "github.com/Sujeeth-Varma/user-dob-api/db/sqlc"
 	"github.com/Sujeeth-Varma/user-dob-api/internal/handler"
 	"github.com/Sujeeth-Varma/user-dob-api/internal/logger"
+	"github.com/Sujeeth-Varma/user-dob-api/internal/middleware"
 	"github.com/Sujeeth-Varma/user-dob-api/internal/repository"
 	"github.com/Sujeeth-Varma/user-dob-api/internal/routes"
 	"github.com/Sujeeth-Varma/user-dob-api/internal/service"
@@ -29,7 +30,13 @@ func main() {
 	UserHandler := handler.NewUserHandler(svc, log)
 
 	app := fiber.New()
+	app.Use(middleware.RequestID())
+	app.Use(middleware.RequestLogger(log))
 	routes.Register(app, UserHandler)
 
-	app.Listen(":8080")
+	port := os.Getenv("APP_PORT")
+	if port == "" {
+		port = "8080"
+	}
+	app.Listen(":" + port)
 }
